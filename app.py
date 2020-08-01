@@ -1,22 +1,35 @@
 import pymysql
 import os
+import backen
+import json
+
 from flask import Flask, request
 app = Flask(__name__)
+
+with open('IDPW.json','r',encoding='utf8') as f:
+    jsonfile = f.read()
+    jsonfile = json.loads(jsonfile)
+
 
 @app.route("/")
 def hello():
     return "Hello World!"
+
+@app.route("/letmetry")
+def letmetry():
+    temp = backen.another()
+    return temp
 
 # 新增 一筆 資料
 @app.route('/restfulapi', methods=['POST'])
 def add_product():
     name = request.json['name']
     try:
-        connect_database = pymysql.connect(host='database-test-two.cqiihvqn7gdj.us-east-1.rds.amazonaws.com',
-                                           user='admin',
-                                           passwd='7M4fjqWx3pVPd7luDHSS',
-                                           db='utf8_schema',
-                                           charset='utf8'
+        connect_database = pymysql.connect(host=jsonfile['host'],
+                                           user=jsonfile['user'],
+                                           passwd=jsonfile['passwd'],
+                                           db=jsonfile['db'],
+                                           charset=jsonfile['charset']
                                            )
         print(':: 成功連線mySQL')
 
@@ -37,26 +50,22 @@ def add_product():
 @app.route('/restfulapi', methods=['GET'])
 def search_all():
     try:
-        connect_database = pymysql.connect(host='database-test-two.cqiihvqn7gdj.us-east-1.rds.amazonaws.com',
-                                           user='admin',
-                                           passwd='7M4fjqWx3pVPd7luDHSS',
-                                           db='utf8_schema',
-                                           charset='utf8'
+        connect_database = pymysql.connect(host=jsonfile['host'],
+                                           user=jsonfile['user'],
+                                           passwd=jsonfile['passwd'],
+                                           db=jsonfile['db'],
+                                           charset=jsonfile['charset']
                                            )
         print(':: 成功連線mySQL')
 
         cursor = connect_database.cursor()
         # 搜尋資料 fetchall
-        cursor.execute('SELECT * FROM `restfualAPI`')
+        cursor.execute('SELECT `id`,`name` FROM `restfualAPI`')
         r = cursor.fetchall()
-        return_list = []
-        for ele in r:
-            #print(list(ele))
-            return_list.append(list(ele))
 
         connect_database.close()
         print(':: 結束連線mySQL')
-        return str(return_list)
+        return json.dumps(r)
     except Exception as e:
         return e
 
@@ -64,26 +73,23 @@ def search_all():
 @app.route('/restfulapi/<id>', methods=['GET'])
 def search_one(id):
     try:
-        connect_database = pymysql.connect(host='database-test-two.cqiihvqn7gdj.us-east-1.rds.amazonaws.com',
-                                           user='admin',
-                                           passwd='7M4fjqWx3pVPd7luDHSS',
-                                           db='utf8_schema',
-                                           charset='utf8'
+        connect_database = pymysql.connect(host=jsonfile['host'],
+                                           user=jsonfile['user'],
+                                           passwd=jsonfile['passwd'],
+                                           db=jsonfile['db'],
+                                           charset=jsonfile['charset']
                                            )
         print(':: 成功連線mySQL')
 
         cursor = connect_database.cursor()
         # 搜尋資料 fetchall
-        cursor.execute('SELECT * FROM `restfualAPI`WHERE `id`=%s',[id])
-        r = cursor.fetchall()
-        return_list = []
-        for ele in r:
-            #print(list(ele))
-            return_list.append(list(ele))
+        cursor.execute('SELECT `id`,`name` FROM `restfualAPI` WHERE `id`=%s',[id])
+        r = cursor.fetchone()
 
         connect_database.close()
         print(':: 結束連線mySQL')
-        return str(return_list)
+        return json.dumps(r)
+
     except Exception as e:
         return e
 
@@ -93,11 +99,11 @@ def search_one(id):
 def update_product(id):
     name = request.json['name']
     try:
-        connect_database = pymysql.connect(host='database-test-two.cqiihvqn7gdj.us-east-1.rds.amazonaws.com',
-                                           user='admin',
-                                           passwd='7M4fjqWx3pVPd7luDHSS',
-                                           db='utf8_schema',
-                                           charset='utf8'
+        connect_database = pymysql.connect(host=jsonfile['host'],
+                                           user=jsonfile['user'],
+                                           passwd=jsonfile['passwd'],
+                                           db=jsonfile['db'],
+                                           charset=jsonfile['charset']
                                            )
         print(':: 成功連線mySQL')
 
@@ -118,11 +124,11 @@ def update_product(id):
 @app.route('/restfulapi/<id>', methods=['DELETE'])
 def DELETE(id):
     try:
-        connect_database = pymysql.connect(host='database-test-two.cqiihvqn7gdj.us-east-1.rds.amazonaws.com',
-                                           user='admin',
-                                           passwd='7M4fjqWx3pVPd7luDHSS',
-                                           db='utf8_schema',
-                                           charset='utf8'
+        connect_database = pymysql.connect(host=jsonfile['host'],
+                                           user=jsonfile['user'],
+                                           passwd=jsonfile['passwd'],
+                                           db=jsonfile['db'],
+                                           charset=jsonfile['charset']
                                            )
         print(':: 成功連線mySQL')
 
