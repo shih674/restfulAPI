@@ -15,7 +15,7 @@ practice of restful API with MySQL on RDS and app on Heroku
 ---
 
 API 1
-網址: https://simsysapi.herokuapp.com/sim/kernel
+網址: https://simsysapi.herokuapp.com/sim/kernel </br>
 方法: GET
 功能: 模擬推薦商品服務提供的API
 輸入: 
